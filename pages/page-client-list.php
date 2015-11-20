@@ -16,6 +16,8 @@ get_header();
 				foreach( $cats as $cat ) {
 					$cat_id= $cat->term_id;
 					echo '<h2 style="padding-top: 1em;">'.$cat->name.'</h2>';
+					add_filter('posts_fields', 'fcwp_create_temp_column');
+					add_filter('posts_orderby', 'fcwp_sort_by_temp_column');
 					$client_query = new WP_Query(array(
 					    'post_type'         => 'clients',
 					    'posts_per_page'    => '999',
@@ -30,6 +32,8 @@ get_header();
 						'orderby'			=> 'title',
 						'order'				=> 'ASC'
 					));
+					remove_filter('posts_fields','fcwp_create_temp_column');
+					remove_filter('posts_orderby', 'fcwp_sort_by_temp_column');
 					if (have_posts()) : while ($client_query->have_posts()) : $client_query->the_post();
 					?>
 		            <div class="posts__excerpt">

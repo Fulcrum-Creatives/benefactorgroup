@@ -333,21 +333,29 @@ add_filter( 'comments_open', 'filter_media_comment_status', 10 , 2 );
 
 /* Ignore "the" in query order by title
 ================================================================================*/
-$mam_global_fields = ", IF($wpdb->posts.post_title REGEXP('^the '),CONCAT(SUBSTR($wpdb->posts.post_title,5), ', ', SUBSTR($wpdb->posts.post_title,1,4)),$wpdb->posts.post_title) AS sort_title";
-$mam_global_orderby = " UPPER(sort_title) ASC";
-function mam_posts_fields ($fields) {
-    global $mam_global_fields;
-    if($mam_global_fields && !is_page('clients') ){
-        $fields .= (preg_match('/^(\s+)?,/',$mam_global_fields)) ? $mam_global_fields : ", $mam_global_fields";
+if( !function_exists( 'fcwp_create_temp_column' ) ) :
+  function fcwp_create_temp_column($fields) {
+    global $wpdb;
+    $matches = 'The';
+    $has_the = " CASE 
+        WHEN $wpdb->posts.post_title regexp( '^($matches)[[:space:]]' )
+          THEN trim(substr($wpdb->posts.post_title from 4)) 
+        ELSE $wpdb->posts.post_title 
+          END AS title2";
+    if ($has_the) {
+      $fields .= ( preg_match( '/^(\s+)?,/', $has_the ) ) ? $has_the : ", $has_the";
     }
     return $fields;
-}
-function mam_posts_orderby ($orderby) {
-    global $mam_global_orderby;
-    if ( $mam_global_orderby && !is_page('clients')) {
-        $orderby = $mam_global_orderby;
+  }
+  add_filter('posts_fields', 'fcwp_create_temp_column');
+endif;
+if( !function_exists( 'fcwp_sort_by_temp_column' ) ) :
+  function fcwp_sort_by_temp_column ($orderby) {
+    $custom_orderby = " UPPER(title2) ASC";
+    if ($custom_orderby) {
+      $orderby = $custom_orderby;
     }
     return $orderby;
-}
-add_filter('posts_fields','mam_posts_fields');
-add_filter('posts_orderby','mam_posts_orderby');
+  }
+  add_filter('posts_orderby', 'fcwp_sort_by_temp_column');
+endif;
