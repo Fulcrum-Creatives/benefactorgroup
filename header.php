@@ -34,41 +34,20 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], '
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 <?php echo '<link rel="canonical" href="' . home_url() . '" />'; echo "\n" ?>
 <?php wp_head(); ?>
-
-
-	<!-- add in if giving USA 2015 stuff here -->
-		
-		<?php
-if ( is_attachment() ) { ?>
-<meta property="og:title" content="
-				<?php 
-		$url = (get_permalink( $post->id ));
-		if (strpos ($url, 'giving-usa-2015') !== false) {
-			?>Giving USA 2015 -<?php } ?>
-			
-			<?php the_title();?>" />
-			
-			
-			
-<meta property="og:description" content=" <?php $post_id = ($post->id);
-$post_object = get_post( $post_id );
-echo $post_object->post_content; ?>">		
-
-<meta property="og:image" content="<?php echo wp_get_attachment_url( $post_id ); ?>">	
-
-			
-			<?php } ?>
-			
-			
-		<!-- end giving USA 2015 stuff here -->
-
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=245867275449045";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<?php
+// Giving USA Attachments for Face Book
+if( is_attachment() ) :
+	$fb_url      = get_permalink( $post->id );
+	$post_object = get_post( $post->id );
+	$fc_content  = $post_object->post_content;
+	$fb_att_url  = wp_get_attachment_url( $post->id );
+	if( strpos ( $fb_url, 'giving-usa-2015' ) !== false ) :
+	 $fb_url = 'Giving USA 2015 -' . get_the_title(); 
+	endif;
+?>		
+<meta property="og:description" content="<?php echo $fc_content; ?>">		
+<meta property="og:image" content="<?php echo $fb_att_url ?>">	
+<?php endif; ?>
 </head>
 <body <?php body_class(); ?>>
 	
