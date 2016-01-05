@@ -12,8 +12,11 @@
 		$ft_image_alt = get_post_meta( $ft_image_data->ID, '_wp_attachment_image_alt', true );
 		$bene_post_subtitle = ( get_field( 'bene_post_subtitle' ) ? get_field( 'bene_post_subtitle' ) : '' );
 		$bene_fcs_label = ( get_field( 'bene_fcs_label', 'option' ) ? get_field( 'bene_fcs_label', 'option' ) : '' );
-		$terms = get_the_terms( get_the_ID(), 'tasks' );
-		$term = array_pop($terms);
+		$get_terms = get_the_terms( get_the_ID(), 'tasks' );
+		$bene_is_case_study = ( get_field( 'bene_is_case_study' ) ? get_field( 'bene_is_case_study' ) : '' );
+		$case_study = ( $bene_is_case_study ? ': Case Study' : '' );
+		$terms = ( is_array( $get_terms ) ) ? array_pop( $get_terms ) : '';
+		$term = ( $terms != '' ) ? $terms->name : '';
 		?>
 		<div class="col col__one-third featured__wrapper">
 			<div class="featured__sm-image">
@@ -30,7 +33,7 @@
 				</h3>
 				<h4 class="ft-subtitle">
 					<a href="<?php echo the_permalink(); ?>">
-						<span class="label"><?php echo $term->name; ?></span> <?php echo $bene_post_subtitle; ?>
+						<span class="label"><?php echo $term; ?></span><?php echo ' ' . $bene_post_subtitle; ?><?php echo $case_study; ?>
 					</a>
 				</h4>
 			</div>

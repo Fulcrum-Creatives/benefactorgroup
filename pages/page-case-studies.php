@@ -14,10 +14,11 @@ get_header();
 				<div id="masonry-loop">
 					<?php
 					$cs_query = new WP_Query(array(
-					    'post_type'         => 'clients',
-					    'posts_per_page'    => '4',
-					    'meta_key'  	 	=> 'bene_is_case_study',
-						'meta_value' 		=> true
+							'post_type'      => 'clients',
+							'posts_per_page' => '4',
+							'meta_key'       => 'bene_is_case_study',
+							'meta_value'     => true,
+							'featured'       => 'yes',
 					));
 					if (have_posts()) : while ($cs_query->have_posts()) : $cs_query->the_post();
 					$term = wp_get_post_terms( get_the_ID(), 'client_categories' );

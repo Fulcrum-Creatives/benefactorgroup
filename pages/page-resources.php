@@ -10,7 +10,6 @@ get_header();
 		$bene_resources_post_category = ( get_field( 'bene_resources_post_category' ) ? get_field( 'bene_resources_post_category' ) : '' );
 		$posts_query = new WP_Query(array(
 		    'post_type'         => 'post',
-		    'posts_per_page'    => $bene_fp_display_amount,
 		    'category__in' 		=> $bene_resources_post_category,
 		    'post_per_page'		=> '3'
 		));
